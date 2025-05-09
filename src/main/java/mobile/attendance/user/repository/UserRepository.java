@@ -1,6 +1,7 @@
 package mobile.attendance.user.repository;
 
 import mobile.attendance.user.User;
+import mobile.attendance.user.UserSearchCondition;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,4 +18,5 @@ public interface UserRepository {
 
     int delete(final String id);
 
+    List<User> findUsers(UserSearchCondition condition);
 }

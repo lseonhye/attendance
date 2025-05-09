@@ -1,6 +1,8 @@
 package mobile.attendance.user.repository;
 
 import mobile.attendance.user.User;
+import mobile.attendance.user.UserSearchCondition;
+import mobile.attendance.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,18 +40,43 @@ public class JdbcTemplateUserRepository implements UserRepository {
     }
 
     @Override
-    public List<User> findAll() {
-        String sql =  "SELECT * FROM users";
-        List<User> userList = jdbcTemplate.query(sql, rowMapper());
-        log.debug("userList: {}", userList);
-        return userList;
-    }
-
-    @Override
     public Optional<User> findById(final String id) {
         String sql = "SELECT * FROM users WHERE user_id = ?";
         User user = jdbcTemplate.queryForObject(sql, rowMapper(), id);
         return Optional.of(user);
+    }
+
+    @Override
+    public List<User> findUsers(final UserSearchCondition condition) {
+        System.out.println(condition);
+        String sql = "SELECT * FROM Users WHERE 1 = 1";
+
+        List<Object> params = new ArrayList<>();
+
+        if (condition.getUserId() != null) {
+            sql += " AND user_id LIKE ?";
+            params.add("%" + condition.getUserId() + "%");
+        }
+
+        if (condition.getUserNumber() != 0) {
+            sql += " AND user_number LIKE ?";
+            params.add("%" + condition.getUserNumber() + "%");
+        }
+
+        if (condition.getUserName() != null) {
+            sql += " AND user_name LIKE ?";
+            params.add("%" + condition.getUserName() + "%");
+        }
+
+        if (condition.getUserRank() != null) {
+            sql += " AND user_rank LIKE ?";
+            params.add("%" + condition.getUserRank() + "%");
+        }
+
+
+        System.out.println(sql);
+
+        return jdbcTemplate.query(sql, rowMapper(), params.toArray());
     }
 
     @Override
@@ -61,6 +89,13 @@ public class JdbcTemplateUserRepository implements UserRepository {
     public int delete(final String id) {
         String sql = "DELETE FROM users WHERE user_id = ?";
         return jdbcTemplate.update(sql, id);
+    }
+    @Override
+    public List<User> findAll() {
+        String sql =  "SELECT * FROM users";
+        List<User> userList = jdbcTemplate.query(sql, rowMapper());
+        log.debug("userList: {}", userList);
+        return userList;
     }
 
     private RowMapper<User> rowMapper() {
