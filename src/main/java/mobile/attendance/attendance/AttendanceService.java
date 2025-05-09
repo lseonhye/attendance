@@ -1,12 +1,16 @@
 package mobile.attendance.attendance;
 
 import mobile.attendance.attendance.repository.AttendanceRepository;
+import mobile.attendance.user.repository.JdbcTemplateUserRepository;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 
 public class AttendanceService {
+
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(JdbcTemplateUserRepository.class);
 
     private final AttendanceRepository attendanceRepository;
 

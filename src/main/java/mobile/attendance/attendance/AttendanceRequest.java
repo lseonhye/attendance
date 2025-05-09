@@ -1,32 +1,22 @@
 package mobile.attendance.attendance;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class AttendanceRequest {
     private Long attendanceId;
-    private Date attendanceDate;
+    private LocalDate attendanceDate;
     private String memo;
-
-    public AttendanceRequest() {}
-
-    public AttendanceRequest(final Date attendanceDate, final String memo) {
-        this.attendanceDate = attendanceDate;
-        this.memo = memo;
-    }
 
     public Long getAttendanceId() {
         return attendanceId;
     }
 
-    public Date getAttendanceDate() {
+    public LocalDate getAttendanceDate() {
         return attendanceDate;
     }
 
     public String getMemo() {
         return memo;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
     }
 }

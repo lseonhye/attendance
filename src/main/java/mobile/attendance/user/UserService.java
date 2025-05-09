@@ -32,4 +32,8 @@ public class UserService {
     public int removeUser(final String id) {
         return userRepository.delete(id);
     }
+
+    public List<User> findCustomers(final UserSearchCondition condition) {
+        return userRepository.findUsers(condition);
+    }
 }

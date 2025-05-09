@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class AttendanceLogRequest {
     private String userId;
-    private int attendanceId;
+    private Long attendanceId;
     private Timestamp checkInAt;
     private Timestamp checkOutAt;
     private boolean isPresent;
@@ -12,7 +12,7 @@ public class AttendanceLogRequest {
 
     public AttendanceLogRequest() {}
 
-    public AttendanceLogRequest(String userId, int attendanceId, Timestamp checkInAt, Timestamp checkOutAt, boolean isPresent, String note) {
+    public AttendanceLogRequest(final String userId, final Long attendanceId, final Timestamp checkInAt, final Timestamp checkOutAt, boolean isPresent, final String note) {
         this.userId = userId;
         this.attendanceId = attendanceId;
         this.checkInAt = checkInAt;
@@ -29,11 +29,11 @@ public class AttendanceLogRequest {
         this.userId = userId;
     }
 
-    public int getAttendanceId() {
+    public Long getAttendanceId() {
         return attendanceId;
     }
 
-    public void setAttendanceId(final int attendanceId) {
+    public void setAttendanceId(final Long attendanceId) {
         this.attendanceId = attendanceId;
     }
 

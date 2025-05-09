@@ -2,6 +2,8 @@ package mobile.attendance.attendance.repository;
 
 import mobile.attendance.attendance.Attendance;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +18,6 @@ public interface AttendanceRepository {
     int update(final Attendance attendance);
 
     int delete(final Long id);
+
+    Attendance findByAttendanceDate(LocalDate today);
 }

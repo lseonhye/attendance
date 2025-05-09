@@ -1,10 +1,15 @@
 package mobile.attendance.attendance;
 
+import mobile.attendance.attendanceLog.AttendanceLog;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
+
+@RestController
+@RequestMapping("/api/attendance")
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
@@ -25,12 +30,14 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceService.findAllAttendances());
     }
 
-    @GetMapping
-    public ResponseEntity<Attendance> getAttendance(@RequestBody final AttendanceRequest request) {
-        return ResponseEntity.ok(attendanceService.findById(request.getAttendanceId()).get());
+    @GetMapping("/{id}")
+    public ResponseEntity<Attendance> getAttendanceById(@PathVariable final Long id) {
+        Optional<Attendance> attendance = attendanceService.findById(id);
+
+        return attendance.isPresent() ? ResponseEntity.ok(attendance.get()) : ResponseEntity.notFound().build();
     }
 
-    @PatchMapping
+    @PatchMapping("/{id}")
     public ResponseEntity<String> updateAttendance(@PathVariable("id") final Long id,
                                                    @RequestBody final AttendanceRequest request) {
         Attendance updateAttendance = new Attendance(id, request.getAttendanceDate(), request.getMemo());
@@ -38,7 +45,7 @@ public class AttendanceController {
         return ResponseEntity.ok("성공적으로 출석부 메모가 수정되었습니다.");
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> removeAttendance(@PathVariable("id") final Long id) {
         attendanceService.removeAttendance(id);
         return ResponseEntity.ok("성공적으로 출석부 정보가 삭제되었습니다.");

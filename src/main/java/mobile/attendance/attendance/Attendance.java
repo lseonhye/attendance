@@ -1,20 +1,21 @@
 package mobile.attendance.attendance;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class Attendance {
     private Long attendanceId;
-    private Date attendanceDate;
+    private LocalDate attendanceDate;
     private String memo;
 
     public Attendance() {}
 
-    public Attendance(final Date attendanceDate, final String memo) {
+    public Attendance(final LocalDate attendanceDate, final String memo) {
         this.attendanceDate = attendanceDate;
         this.memo = memo;
     }
 
-    public Attendance(final Long attendanceId, final java.sql.Date attendanceDate, final String memo) {
+    public Attendance(final Long attendanceId, final LocalDate attendanceDate, final String memo) {
         this.attendanceId = attendanceId;
         this.attendanceDate = attendanceDate;
         this.memo = memo;
@@ -28,11 +29,11 @@ public class Attendance {
         this.attendanceId = attendanceId;
     }
 
-    public Date getAttendanceDate() {
+    public LocalDate getAttendanceDate() {
         return attendanceDate;
     }
 
-    public void setAttendanceDate(final Date attendanceDate) {
+    public void setAttendanceDate(final LocalDate attendanceDate) {
         this.attendanceDate = attendanceDate;
     }
 

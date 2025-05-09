@@ -1,9 +1,11 @@
 package mobile.attendance.user;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -19,18 +21,26 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody final UserRequest request) {
         User user = new User(
                 request.getUserId(), request.getUserNumber(), request.getUserPassword(), request.getUserName(), request.getUserRank());
-        return ResponseEntity.ok(userService.createUser(user));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok(userService.findUsers());
+    public ResponseEntity<List<User>> getUsers(final UserSearchCondition condition) {
+
+        List<User> users = userService.findCustomers(condition);
+
+        return users.size() > 0
+                ? ResponseEntity.status(HttpStatus.OK).body(users)
+                : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     // id로 고객 검색 API - GET
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable("id") final String id) {
-        return ResponseEntity.ok(userService.findUserById(id).get());
+    public ResponseEntity<User> getUserById(@PathVariable("id") final String id) {
+
+        Optional<User> user = userService.findUserById(id);
+        return user.isPresent() ? ResponseEntity.ok(user.get()) : ResponseEntity.notFound().build();
     }
 
     // 고객 정보 수정 API - UPDATE
