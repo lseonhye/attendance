@@ -9,8 +9,11 @@ import mobile.attendance.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,13 +61,13 @@ public class AttendanceLogService {
         logger.info("Today's date: " + today);
 
 
-        Attendance attendance = attendanceRepository.findByAttendanceDate(today);
-        if (attendance == null) {
-            attendance = new Attendance();
-            attendance.setAttendanceDate(today);
-            attendanceRepository.save(attendance);
-            logger.info("New attendance created for today");
-        }
+        Optional<Attendance> optionalAttendance = attendanceRepository.findByDate(today);
+        Attendance attendance = optionalAttendance.orElseGet(() -> {
+            Attendance a = new Attendance();
+            a.setAttendanceDate(today);
+            return attendanceRepository.save(a);
+        });
+
 
         List<User> users = userRepository.findAll();
         for (User user : users) {
@@ -80,4 +83,19 @@ public class AttendanceLogService {
         }
         logger.info("Scheduled task completed");
     }
+    @Transactional
+    public AttendanceLog updateCheckoutTime(Long id) {
+        AttendanceLog log = attendanceLogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 로그를 찾을 수 없습니다."));
+
+        if (log.getCheckOutAt() == null) {
+            log.setCheckOutAt(Timestamp.valueOf(LocalDateTime.now())); // 현재 시간
+            attendanceLogRepository.updateCheckoutTime(log); // INSERT 아님! UPDATE
+            return log;
+        }
+        else {
+            throw new IllegalStateException("이미 체크아웃된 로그입니다.");
+        }
+    }
+
 }

@@ -85,5 +85,10 @@ public class JdbcTemplateAttendanceLogRepository implements AttendanceLogReposit
                 rs.getString("note")
         );
     }
+    @Override
+    public int updateCheckoutTime(final AttendanceLog log) {
+        String sql = "UPDATE attendance_log SET check_out_at = ? WHERE log_id = ?";
+        return jdbcTemplate.update(sql, log.getCheckOutAt(), log.getLogId());
+    }
 
 }

@@ -16,4 +16,7 @@ public interface AttendanceLogRepository {
     int update(final AttendanceLog attendanceLog);
 
     int delete(final Long id);
+
+    int updateCheckoutTime(AttendanceLog log); // 체크아웃 시간만 수정할 수 있는 전용 메서드
+
 }

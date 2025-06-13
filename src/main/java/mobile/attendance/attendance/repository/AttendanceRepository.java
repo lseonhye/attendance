@@ -19,5 +19,5 @@ public interface AttendanceRepository {
 
     int delete(final Long id);
 
-    Attendance findByAttendanceDate(LocalDate today);
+    Optional<Attendance> findByDate(LocalDate date); // 이름만 바꾸고 Optional로 변경
 }

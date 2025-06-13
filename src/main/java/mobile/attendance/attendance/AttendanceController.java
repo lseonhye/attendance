@@ -19,10 +19,13 @@ public class AttendanceController {
     }
 
     @PostMapping
-    public ResponseEntity<Attendance> createAttendance(@RequestBody final AttendanceRequest request) {
-        Attendance attendance = new Attendance(
-                request.getAttendanceId(), request.getAttendanceDate(), request.getMemo());
-        return ResponseEntity.ok(attendanceService.createAttendance(attendance));
+    public ResponseEntity<?> createAttendance(@RequestBody final AttendanceRequest request) {
+        try {
+            Attendance attendance = new Attendance(request.getAttendanceDate(), request.getMemo());
+            return ResponseEntity.ok(attendanceService.createAttendance(attendance));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
