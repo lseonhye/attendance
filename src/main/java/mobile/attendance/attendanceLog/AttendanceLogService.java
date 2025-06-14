@@ -10,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +31,12 @@ public class AttendanceLogService {
         this.userRepository = userRepository;
     }
 
-    public AttendanceLog createAttendanceLog(final AttendanceLog attendance) {
-        return attendanceLogRepository.save(attendance);
+    public AttendanceLog createAttendanceLog(final AttendanceLog attendanceLog) {
+        if (attendanceLog.getCheckInAt() == null) {
+            attendanceLog.setCheckInAt(Timestamp.valueOf(LocalDateTime.now())); // 자동 시간 입력
+            attendanceLog.setPresent(true); // 출석으로 간주
+        }
+        return attendanceLogRepository.save(attendanceLog);
     }
 
     public List<AttendanceLog> findAllAttendanceLogs() {
