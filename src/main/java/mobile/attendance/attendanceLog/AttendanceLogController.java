@@ -75,4 +75,16 @@ public class AttendanceLogController {
                     .body("결석 처리 중 오류 발생: " + e.getMessage());
         }
     }
+
+    @PatchMapping("/{id}/checkout")
+    public ResponseEntity<?> checkout(@PathVariable("id") final Long id) {
+        try {
+            AttendanceLog updatedLog = attendanceLogService.updateCheckoutTime(id);
+            return ResponseEntity.ok(updatedLog);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
 }

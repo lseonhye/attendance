@@ -1,6 +1,7 @@
 package mobile.attendance.attendanceLog;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class AttendanceLog {
     private Long logId;
@@ -11,7 +12,8 @@ public class AttendanceLog {
     private boolean isPresent;
     private String note;
 
-    public AttendanceLog() {}
+    public AttendanceLog() {
+    }
 
     public AttendanceLog(final Long logId, final String userId, final Long attendanceId, final Timestamp checkInAt, final Timestamp checkOutAt, final boolean isPresent, final String note) {
         this.logId = logId;
@@ -88,4 +90,11 @@ public class AttendanceLog {
     public void setNote(final String note) {
         this.note = note;
     }
+
+//    public Timestamp getCheckoutOutAt() {
+//        return null;
+//    }
+//
+//    public void setCheckoutOutAt(LocalDateTime now) {
+//    }
 }

@@ -65,13 +65,13 @@ public class AttendanceLogService {
         logger.info("Today's date: " + today);
 
 
-        Attendance attendance = attendanceRepository.findByAttendanceDate(today);
-        if (attendance == null) {
-            attendance = new Attendance();
-            attendance.setAttendanceDate(today);
-            attendanceRepository.save(attendance);
-            logger.info("New attendance created for today");
-        }
+        Optional<Attendance> optionalAttendance = attendanceRepository.findByDate(today);
+        Attendance attendance = optionalAttendance.orElseGet(() -> {
+            Attendance a = new Attendance();
+            a.setAttendanceDate(today);
+            return attendanceRepository.save(a);
+        });
+
 
         List<User> users = userRepository.findAll();
         for (User user : users) {
@@ -87,7 +87,7 @@ public class AttendanceLogService {
         }
         logger.info("Scheduled task completed");
     }
-    @Scheduled(cron = "0 5 0 * * ?") // 매일 자정 5분 (0시 5분에 실행)
+    @Scheduled(cron = "0 5 0 * * ?") // 매일 자정 5분
     @Transactional
     public void markAbsentees() {
         LocalDate yesterday = LocalDate.now().minusDays(1); // 전날
@@ -99,8 +99,6 @@ public class AttendanceLogService {
         }
 
         Attendance attendance = optionalAttendance.get();
-
-        // 해당 날짜의 출석 로그 전부 가져오기
         List<AttendanceLog> logs = attendanceLogRepository.findAllByAttendanceId(attendance.getAttendanceId());
 
         for (AttendanceLog log : logs) {
@@ -112,6 +110,20 @@ public class AttendanceLogService {
         }
 
         logger.info("결석 자동 처리 완료");
+    }
+
+    @Transactional
+    public AttendanceLog updateCheckoutTime(Long id) {
+        AttendanceLog log = attendanceLogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 로그를 찾을 수 없습니다."));
+
+        if (log.getCheckOutAt() == null) {
+            log.setCheckOutAt(Timestamp.valueOf(LocalDateTime.now())); // 현재 시간으로 체크아웃
+            attendanceLogRepository.updateCheckoutTime(log); // DB에 업데이트
+            return log;
+        } else {
+            throw new IllegalStateException("이미 체크아웃된 로그입니다.");
+        }
     }
 
 }

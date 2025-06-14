@@ -20,6 +20,10 @@ public class AttendanceService {
     }
 
     public Attendance createAttendance(final Attendance attendance) {
+        Optional<Attendance> existing = attendanceRepository.findByDate(attendance.getAttendanceDate());
+        if (existing.isPresent()) {
+            throw new IllegalArgumentException("해당 날짜의 출석 정보는 이미 존재합니다.");
+        }
         return attendanceRepository.save(attendance);
     }
 

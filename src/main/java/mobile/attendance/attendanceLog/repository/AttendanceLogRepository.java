@@ -21,4 +21,5 @@ public interface AttendanceLogRepository {
 
     int updateNote(AttendanceLog log);
 
+    int updateCheckoutTime(AttendanceLog log); // 체크아웃 시간 업데이트
 }
