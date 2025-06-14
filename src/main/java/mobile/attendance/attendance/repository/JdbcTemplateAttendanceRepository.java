@@ -105,4 +105,20 @@ public class JdbcTemplateAttendanceRepository implements AttendanceRepository {
                 rs.getString("memo")
         );
     }
+    @Override
+    public Optional<Attendance> findByDate(final LocalDate date) {
+        String sql = "SELECT * FROM attendance WHERE attendance_date = ?";
+
+        List<Attendance> results = jdbcTemplate.query(
+                sql,
+                new Object[]{Date.valueOf(date)},
+                new BeanPropertyRowMapper<>(Attendance.class)
+        );
+
+        if (results.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(results.get(0));
+    }
+
 }

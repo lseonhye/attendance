@@ -74,6 +74,19 @@ public class JdbcTemplateAttendanceLogRepository implements AttendanceLogReposit
         return jdbcTemplate.update(sql, id);
     }
 
+    @Override
+    public List<AttendanceLog> findAllByAttendanceId(final Long attendanceId) {
+        String sql = "SELECT * FROM attendance_log WHERE attendance_id = ?";
+        return jdbcTemplate.query(sql, rowMapper(), attendanceId);
+    }
+
+    @Override
+    public int updateNote(final AttendanceLog log) {
+        String sql = "UPDATE attendance_log SET note = ? WHERE log_id = ?";
+        return jdbcTemplate.update(sql, log.getNote(), log.getLogId());
+    }
+
+
     private RowMapper<AttendanceLog> rowMapper() {
         return (rs, rowNum) -> new AttendanceLog(
                 rs.getLong("log_id"),

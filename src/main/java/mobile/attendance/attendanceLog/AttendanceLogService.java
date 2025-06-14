@@ -9,6 +9,7 @@ import mobile.attendance.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -80,4 +81,31 @@ public class AttendanceLogService {
         }
         logger.info("Scheduled task completed");
     }
+    @Scheduled(cron = "0 5 0 * * ?") // 매일 자정 5분 (0시 5분에 실행)
+    @Transactional
+    public void markAbsentees() {
+        LocalDate yesterday = LocalDate.now().minusDays(1); // 전날
+
+        Optional<Attendance> optionalAttendance = attendanceRepository.findByDate(yesterday);
+        if (optionalAttendance.isEmpty()) {
+            logger.info("어제 출석 기록 없음");
+            return;
+        }
+
+        Attendance attendance = optionalAttendance.get();
+
+        // 해당 날짜의 출석 로그 전부 가져오기
+        List<AttendanceLog> logs = attendanceLogRepository.findAllByAttendanceId(attendance.getAttendanceId());
+
+        for (AttendanceLog log : logs) {
+            if (log.getCheckInAt() == null && (log.getNote() == null || log.getNote().isEmpty())) {
+                log.setNote("결석");
+                attendanceLogRepository.updateNote(log);
+                logger.info("결석 처리: userId={}, attendanceId={}", log.getUserId(), log.getAttendanceId());
+            }
+        }
+
+        logger.info("결석 자동 처리 완료");
+    }
+
 }

@@ -69,4 +69,15 @@ public class AttendanceLogController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error triggering scheduled task");
         }
     }
+    @PostMapping("/mark_absentees")
+    public ResponseEntity<String> markAbsenteesManually() {
+        try {
+            attendanceLogService.markAbsentees(); // 스케줄러 로직 수동 실행
+            return ResponseEntity.ok("결석 처리 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("결석 처리 중 오류 발생: " + e.getMessage());
+        }
+    }
+
 }
