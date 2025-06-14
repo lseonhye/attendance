@@ -1,6 +1,5 @@
 package mobile.attendance.attendanceLog;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/api/attendance_log")
@@ -59,10 +57,7 @@ public class AttendanceLogController {
     @PostMapping("/create_logs")
     public ResponseEntity<String> createAttendanceLogs(@RequestBody final AttendanceLogRequest request) {
         try {
-
             AttendanceLog attendanceLog = new AttendanceLog(request.getUserId(), request.getAttendanceId());
-
-            // @Scheduled 메서드 수동 호출
             attendanceLogService.createAttendanceLog(attendanceLog);
             return ResponseEntity.ok("Scheduled task manually triggered!");
         } catch (Exception e) {
@@ -70,4 +65,14 @@ public class AttendanceLogController {
         }
     }
 
+    @PostMapping("/mark_absentees")
+    public ResponseEntity<String> markAbsenteesManually() {
+        try {
+            attendanceLogService.markAbsentees(); // 스케줄러 로직 수동 실행
+            return ResponseEntity.ok("결석 처리 완료");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("결석 처리 중 오류 발생: " + e.getMessage());
+        }
+    }
 }

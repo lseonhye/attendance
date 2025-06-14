@@ -16,4 +16,9 @@ public interface AttendanceLogRepository {
     int update(final AttendanceLog attendanceLog);
 
     int delete(final Long id);
+
+    List<AttendanceLog> findAllByAttendanceId(Long attendanceId);
+
+    int updateNote(AttendanceLog log);
+
 }
