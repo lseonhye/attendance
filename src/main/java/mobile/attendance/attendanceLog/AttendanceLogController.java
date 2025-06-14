@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,4 +88,17 @@ public class AttendanceLogController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+    @GetMapping("/{id}/duration")
+    public ResponseEntity<?> getAttendanceDuration(@PathVariable("id") final Long id) {
+        try {
+            Duration duration = attendanceLogService.calculateDuration(id);
+            long hours = duration.toHours();
+            long minutes = duration.toMinutes() % 60;
+
+            return ResponseEntity.ok(String.format("출석 시간: %d시간 %d분", hours, minutes));
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }

@@ -2,10 +2,10 @@ package mobile.attendance.attendance.repository;
 
 import mobile.attendance.attendance.Attendance;
 import mobile.attendance.user.repository.JdbcTemplateUserRepository;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -32,18 +32,18 @@ public class JdbcTemplateAttendanceRepository implements AttendanceRepository {
     @Transactional
     public Attendance save(final Attendance attendance) {
         String checkSql = "SELECT COUNT(*) FROM attendance WHERE attendance_date = ?";
-        int count = jdbcTemplate.queryForObject(checkSql, new Object[]{java.sql.Date.valueOf(attendance.getAttendanceDate())}, Integer.class);
+        int count = jdbcTemplate.queryForObject(checkSql, new Object[]{Date.valueOf(attendance.getAttendanceDate())}, Integer.class);
 
         if (count > 0) {
             throw new IllegalArgumentException("Attendance date already exists.");
         }
-        String sql =  "INSERT INTO attendance (attendance_date, memo) VALUES (?, ?)";
+
+        String sql = "INSERT INTO attendance (attendance_date, memo) VALUES (?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        final LocalDate finalAttendanceDate = attendance.getAttendanceDate();
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[] {"attendance_id"});
-            ps.setDate(1, Date.valueOf(finalAttendanceDate));
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"attendance_id"});
+            ps.setDate(1, Date.valueOf(attendance.getAttendanceDate()));
             ps.setString(2, attendance.getMemo());
             return ps;
         }, keyHolder);
@@ -57,7 +57,7 @@ public class JdbcTemplateAttendanceRepository implements AttendanceRepository {
 
     @Override
     public List<Attendance> findAll() {
-        String sql =  "SELECT * FROM attendance";
+        String sql = "SELECT * FROM attendance";
         List<Attendance> attendanceList = jdbcTemplate.query(sql, rowMapper());
         log.debug("attendanceList: {}", attendanceList);
         return attendanceList;
@@ -65,7 +65,7 @@ public class JdbcTemplateAttendanceRepository implements AttendanceRepository {
 
     @Override
     public Optional<Attendance> findById(final Long id) {
-        String sql =  "SELECT * FROM attendance WHERE attendance_id = ?";
+        String sql = "SELECT * FROM attendance WHERE attendance_id = ?";
         Attendance attendance = jdbcTemplate.queryForObject(sql, rowMapper(), id);
         return Optional.of(attendance);
     }
@@ -105,20 +105,4 @@ public class JdbcTemplateAttendanceRepository implements AttendanceRepository {
                 rs.getString("memo")
         );
     }
-    @Override
-    public Optional<Attendance> findByDate(final LocalDate date) {
-        String sql = "SELECT * FROM attendance WHERE attendance_date = ?";
-
-        List<Attendance> results = jdbcTemplate.query(
-                sql,
-                new Object[]{Date.valueOf(date)},
-                new BeanPropertyRowMapper<>(Attendance.class)
-        );
-
-        if (results.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(results.get(0));
-    }
-
 }

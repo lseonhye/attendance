@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -124,6 +125,19 @@ public class AttendanceLogService {
         } else {
             throw new IllegalStateException("이미 체크아웃된 로그입니다.");
         }
+    }
+    public Duration calculateDuration(Long id) {
+        AttendanceLog log = attendanceLogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 출석 로그가 존재하지 않습니다."));
+
+        if (log.getCheckInAt() == null || log.getCheckOutAt() == null) {
+            throw new IllegalStateException("입실 또는 퇴실 시간이 존재하지 않습니다.");
+        }
+
+        return Duration.between(
+                log.getCheckInAt().toLocalDateTime(),
+                log.getCheckOutAt().toLocalDateTime()
+        );
     }
 
 }
