@@ -75,17 +75,17 @@ public class JdbcTemplateAttendanceRepository implements AttendanceRepository {
     @Override
     public List<Attendance> findAttendance(final AttendanceSearchCondition condition) {
         System.out.println(condition);
-        String sql = "SELECT * FROM attendance_log WHERE 1 = 1";
+        String sql = "SELECT * FROM attendance WHERE 1 = 1";
 
         List<Object> params = new ArrayList<>();
 
         if (condition.getAttendanceDate() != null) {
             sql += " AND attendance_date = ?";
-            params.add("%" + condition.getAttendanceDate() + "%");
+            params.add("%" + condition.getAttendanceDate());
         }
 
         if (condition.getMemo() != null) {
-            sql += " AND memo = ?";
+            sql += " AND memo LIKE ?";
             params.add("%" + condition.getMemo() + "%");
         }
         System.out.println(sql);

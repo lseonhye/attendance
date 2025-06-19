@@ -89,7 +89,7 @@ public class JdbcTemplateAttendanceLogRepository implements AttendanceLogReposit
 
         if (condition.getUserId() != null) {
             sql += " AND user_id = ?";
-            params.add("%" + condition.getAttendanceId() + "%");
+            params.add(condition.getUserId() + "%");
         }
 
         if (condition.getAttendanceId() != 0) {
@@ -98,12 +98,12 @@ public class JdbcTemplateAttendanceLogRepository implements AttendanceLogReposit
         }
 
         if (condition.getCheckInAt() != null) {
-            sql += " AND check_in_at LIKE ?";
+            sql += " AND check_in_at >= ?";
             params.add("%" + condition.getCheckInAt() + "%");
         }
 
         if (condition.getCheckOutAt() != null) {
-            sql += " AND check_out_at LIKE ?";
+            sql += " AND check_out_at <= ?";
             params.add("%" + condition.getCheckOutAt() + "%");
         }
 
