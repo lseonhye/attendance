@@ -1,46 +1,25 @@
 package mobile.attendance.attendanceLog;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
-public class AttendanceLog {
-    private Long logId;
+public class AttendanceLogSearchCondition {
     private String userId;
-    private Long attendanceId;
+    private int attendanceId;
     private Timestamp checkInAt;
     private Timestamp checkOutAt;
     private boolean isPresent;
     private String note;
 
-    public AttendanceLog() {
+    public AttendanceLogSearchCondition() {
     }
 
-    public AttendanceLog(final Long logId, final String userId, final Long attendanceId, final Timestamp checkInAt, final Timestamp checkOutAt, final boolean isPresent, final String note) {
-        this.logId = logId;
+    public AttendanceLogSearchCondition(final String userId, final int attendanceId, final Timestamp checkInAt, final Timestamp checkOutAt, final boolean isPresent, final String note) {
         this.userId = userId;
         this.attendanceId = attendanceId;
         this.checkInAt = checkInAt;
         this.checkOutAt = checkOutAt;
         this.isPresent = isPresent;
         this.note = note;
-    }
-
-    public AttendanceLog(final String userId, final Long attendanceId) {
-        this.userId = userId;
-        this.attendanceId = attendanceId;
-    }
-
-    public AttendanceLog(final Long logId, final String note) {
-        this.logId = logId;
-        this.note = note;
-    }
-
-    public Long getLogId() {
-        return logId;
-    }
-
-    public void setLogId(final Long logId) {
-        this.logId = logId;
     }
 
     public String getUserId() {
@@ -51,11 +30,11 @@ public class AttendanceLog {
         this.userId = userId;
     }
 
-    public Long getAttendanceId() {
+    public int getAttendanceId() {
         return attendanceId;
     }
 
-    public void setAttendanceId(final Long attendanceId) {
+    public void setAttendanceId(final int attendanceId) {
         this.attendanceId = attendanceId;
     }
 
@@ -89,5 +68,17 @@ public class AttendanceLog {
 
     public void setNote(final String note) {
         this.note = note;
+    }
+
+    @Override
+    public String toString() {
+        return "AttendanceLogSearchCondition{" +
+                "userId='" + userId + '\'' +
+                ", attendanceId=" + attendanceId +
+                ", checkInAt=" + checkInAt +
+                ", checkOutAt=" + checkOutAt +
+                ", isPresent=" + isPresent +
+                ", note='" + note + '\'' +
+                '}';
     }
 }

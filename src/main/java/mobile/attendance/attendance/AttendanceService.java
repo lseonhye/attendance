@@ -10,8 +10,6 @@ import java.util.Optional;
 
 public class AttendanceService {
 
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(JdbcTemplateUserRepository.class);
-
     private final AttendanceRepository attendanceRepository;
 
     public AttendanceService(AttendanceRepository attendanceRepository)
@@ -33,6 +31,10 @@ public class AttendanceService {
 
     public Optional<Attendance> findById(final Long id) {
         return attendanceRepository.findById(id);
+    }
+
+    public List<Attendance> findAttendances(final AttendanceSearchCondition condition) {
+        return attendanceRepository.findAttendance(condition);
     }
 
     public int updateAttendance(final Attendance attendance) {

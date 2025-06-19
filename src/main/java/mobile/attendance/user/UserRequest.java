@@ -5,11 +5,11 @@ public class UserRequest {
     private int userNumber;
     private String userPassword;
     private String userName;
-    private String userRank;
+    private UserRole userRank;
 
     public UserRequest() {}
 
-    public UserRequest(final String userId, final int userNumber, final String userPassword, final String userName, final String userRank) {
+    public UserRequest(final String userId, final int userNumber, final String userPassword, final String userName, final UserRole userRank) {
         this.userId = userId;
         this.userNumber = userNumber;
         this.userPassword = userPassword;
@@ -17,7 +17,7 @@ public class UserRequest {
         this.userRank = userRank;
     }
 
-    public UserRequest(final int userNumber, final String password, final String userName, final String userRank) {
+    public UserRequest(final int userNumber, final String password, final String userName, final UserRole userRank) {
         this.userNumber = userNumber;
         this.userPassword = password;
         this.userName = userName;
@@ -40,7 +40,7 @@ public class UserRequest {
         return userName;
     }
 
-    public String getUserRank() {
+    public UserRole getUserRank(final UserRole userRank) {
         return userRank;
     }
 }

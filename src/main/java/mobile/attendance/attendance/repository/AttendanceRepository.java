@@ -1,6 +1,7 @@
 package mobile.attendance.attendance.repository;
 
 import mobile.attendance.attendance.Attendance;
+import mobile.attendance.attendance.AttendanceSearchCondition;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +14,8 @@ public interface AttendanceRepository {
     List<Attendance> findAll();
 
     Optional<Attendance> findById(final Long id);
+
+    List<Attendance> findAttendance(AttendanceSearchCondition condition);
 
     int update(final Attendance attendance);
 

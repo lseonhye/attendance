@@ -1,6 +1,7 @@
 package mobile.attendance.attendance.repository;
 
 import mobile.attendance.attendance.Attendance;
+import mobile.attendance.attendance.AttendanceSearchCondition;
 import mobile.attendance.user.repository.JdbcTemplateUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -71,6 +73,27 @@ public class JdbcTemplateAttendanceRepository implements AttendanceRepository {
     }
 
     @Override
+    public List<Attendance> findAttendance(final AttendanceSearchCondition condition) {
+        System.out.println(condition);
+        String sql = "SELECT * FROM attendance_log WHERE 1 = 1";
+
+        List<Object> params = new ArrayList<>();
+
+        if (condition.getAttendanceDate() != null) {
+            sql += " AND attendance_date = ?";
+            params.add("%" + condition.getAttendanceDate() + "%");
+        }
+
+        if (condition.getMemo() != null) {
+            sql += " AND memo = ?";
+            params.add("%" + condition.getMemo() + "%");
+        }
+        System.out.println(sql);
+
+        return jdbcTemplate.query(sql, rowMapper(), params.toArray());
+    }
+
+    @Override
     public int update(final Attendance attendance) {
         String sql = "UPDATE attendance SET memo = ? WHERE attendance_id = ?";
         return jdbcTemplate.update(sql, attendance.getMemo(), attendance.getAttendanceId());
@@ -97,6 +120,7 @@ public class JdbcTemplateAttendanceRepository implements AttendanceRepository {
         }
         return Optional.of(results.get(0));
     }
+
 
     private RowMapper<Attendance> rowMapper() {
         return (rs, rowNum) -> new Attendance(

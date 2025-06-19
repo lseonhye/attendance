@@ -1,19 +1,18 @@
 package mobile.attendance.config;
 
-import mobile.attendance.attendance.AttendanceController;
 import mobile.attendance.attendance.AttendanceService;
 import mobile.attendance.attendance.repository.AttendanceRepository;
 import mobile.attendance.attendance.repository.JdbcTemplateAttendanceRepository;
-import mobile.attendance.attendanceLog.AttendanceLogController;
 import mobile.attendance.attendanceLog.AttendanceLogService;
 import mobile.attendance.attendanceLog.repository.AttendanceLogRepository;
 import mobile.attendance.attendanceLog.repository.JdbcTemplateAttendanceLogRepository;
+import mobile.attendance.auth.AuthService;
 import mobile.attendance.user.UserService;
 import mobile.attendance.user.repository.JdbcTemplateUserRepository;
 import mobile.attendance.user.repository.UserRepository;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
 
@@ -21,7 +20,7 @@ import javax.sql.DataSource;
 public class JdbcTemplateConfig {
     private final DataSource dataSource;
 
-    public JdbcTemplateConfig(final DataSource dataSource) {
+    public JdbcTemplateConfig(final DataSource dataSource, final PasswordEncoder passwordEncoder) {
         this.dataSource = dataSource;
     }
 
@@ -31,8 +30,9 @@ public class JdbcTemplateConfig {
     }
 
     @Bean
-    public UserService userService() {
-        return new UserService(userRepository());
+    public UserService userService(UserRepository userRepository,
+                                   PasswordEncoder passwordEncoder) {
+        return new UserService(userRepository, passwordEncoder);
     }
 
     @Bean
@@ -56,8 +56,9 @@ public class JdbcTemplateConfig {
     }
 
     @Bean
-    public AttendanceLogController attendanceLogController() {
-        return new AttendanceLogController(attendanceLogService());
+    public AuthService authService(UserRepository userRepository,
+                                   PasswordEncoder passwordEncoder) {
+        return new AuthService(userRepository, passwordEncoder);
     }
 }
 

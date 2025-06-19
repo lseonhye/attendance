@@ -1,21 +1,29 @@
-package mobile.attendance.user;
+package mobile.attendance.user.dto;
 
-public class User {
+import mobile.attendance.user.UserRole;
 
+public class UserRequest {
     private String userId;
     private int userNumber;
     private String userPassword;
     private String userName;
     private UserRole userRank;
 
-    public User() {}
+    public UserRequest() {}
 
-    public User(String userId, int userNumber, String password, String userName, UserRole rank) {
+    public UserRequest(final String userId, final int userNumber, final String userPassword, final String userName, final UserRole userRank) {
         this.userId = userId;
+        this.userNumber = userNumber;
+        this.userPassword = userPassword;
+        this.userName = userName;
+        this.userRank = userRank;
+    }
+
+    public UserRequest(final int userNumber, final String password, final String userName, final UserRole userRank) {
         this.userNumber = userNumber;
         this.userPassword = password;
         this.userName = userName;
-        this.userRank = rank;
+        this.userRank = userRank;
     }
 
     public String getUserId() {
@@ -36,13 +44,5 @@ public class User {
 
     public UserRole getUserRank() {
         return userRank;
-    }
-
-    public void setUserId(final String userId) {
-        this.userId = userId;
-    }
-
-    public void setUserPassword(final String userPassword) {
-        this.userPassword = userPassword;
     }
 }

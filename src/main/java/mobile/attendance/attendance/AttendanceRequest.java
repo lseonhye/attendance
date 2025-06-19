@@ -6,6 +6,7 @@ public class AttendanceRequest {
     private LocalDate attendanceDate;
     private String memo;
 
+
     public LocalDate getAttendanceDate() {
         return attendanceDate;
     }

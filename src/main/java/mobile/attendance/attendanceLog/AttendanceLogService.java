@@ -88,6 +88,7 @@ public class AttendanceLogService {
         }
         logger.info("Scheduled task completed");
     }
+
     @Scheduled(cron = "0 5 0 * * ?") // 매일 자정 5분
     @Transactional
     public void markAbsentees() {

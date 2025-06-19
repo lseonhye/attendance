@@ -1,6 +1,7 @@
 package mobile.attendance.attendance;
 
 import mobile.attendance.attendanceLog.AttendanceLog;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +30,9 @@ public class AttendanceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Attendance>> getAttendances() {
-        return ResponseEntity.ok(attendanceService.findAllAttendances());
+    public ResponseEntity<List<Attendance>> getAttendances(final AttendanceSearchCondition condition) {
+        List<Attendance> attendances = attendanceService.findAttendances(condition);
+        return attendances.size() > 0 ? ResponseEntity.ok(attendances) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/{id}")

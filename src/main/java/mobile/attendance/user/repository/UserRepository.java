@@ -18,5 +18,7 @@ public interface UserRepository {
 
     int delete(final String id);
 
+    Optional<User> findByNumber(int userNumber);
+
     List<User> findUsers(UserSearchCondition condition);
 }
