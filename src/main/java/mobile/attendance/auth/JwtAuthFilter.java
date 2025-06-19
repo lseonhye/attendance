@@ -26,8 +26,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws ServletException, IOException {
 
         String auth = req.getHeader("Authorization");
-
         String path = req.getRequestURI();
+
+        // 로그인(API /api/auth/**)은 토큰 체크 없이 통과
         if (path.startsWith("/api/auth")) {
             chain.doFilter(req, res);
             return;
@@ -37,11 +38,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String token = auth.substring(7);
 
             if (jwt.validate(token)) {
-                String userId = jwt.getUserId(token);
-
+                // 🔥 기존 코드 삭제하고 아래 한 줄로 교체
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                userId, null, Collections.emptyList());
+                        jwt.getAuthentication(token);   // ROLE_STUDENT 포함
 
                 authentication.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(req));

@@ -1,21 +1,24 @@
 package mobile.attendance.attendance;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class AttendanceSearchCondition {
-    private Date attendanceDate;
+    private LocalDate attendanceDate;
     private String memo;
 
-    public AttendanceSearchCondition(final String memo, final Date attendanceDate) {
+    public AttendanceSearchCondition() {}
+
+    public AttendanceSearchCondition(final String memo, final LocalDate attendanceDate) {
         this.memo = memo;
         this.attendanceDate = attendanceDate;
     }
 
-    public Date getAttendanceDate() {
+    public LocalDate getAttendanceDate() {
         return attendanceDate;
     }
 
-    public void setAttendanceDate(final Date attendanceDate) {
+    public void setAttendanceDate(final LocalDate attendanceDate) {
         this.attendanceDate = attendanceDate;
     }
 

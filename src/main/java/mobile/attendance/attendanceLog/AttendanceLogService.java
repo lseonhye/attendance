@@ -49,10 +49,17 @@ public class AttendanceLogService {
         return attendanceLogRepository.findById(id);
     }
 
-    public int updateAttendanceLog(final AttendanceLog attendanceLog) {
-        return attendanceLogRepository.update(attendanceLog);
-    }
+    public AttendanceLog updateAttendanceLog(AttendanceLog log) {
 
+        int updateCount = attendanceLogRepository.update(log);
+
+        if (updateCount == 1) {
+            return attendanceLogRepository.findById(log.getLogId())
+                    .orElseThrow(() ->
+                            new IllegalStateException("update 후 조회 실패"));
+        }
+        throw new IllegalArgumentException("해당 로그가 없습니다");
+    }
     public int removeAttendanceLog(final Long id) {
         return attendanceLogRepository.delete(id);
     }

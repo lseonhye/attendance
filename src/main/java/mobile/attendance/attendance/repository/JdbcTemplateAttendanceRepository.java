@@ -81,7 +81,7 @@ public class JdbcTemplateAttendanceRepository implements AttendanceRepository {
 
         if (condition.getAttendanceDate() != null) {
             sql += " AND attendance_date = ?";
-            params.add("%" + condition.getAttendanceDate());
+            params.add(java.sql.Date.valueOf(condition.getAttendanceDate()));
         }
 
         if (condition.getMemo() != null) {

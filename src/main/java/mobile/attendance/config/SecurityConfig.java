@@ -23,6 +23,8 @@ public class SecurityConfig {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -30,15 +32,22 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(sm ->
                         sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .httpBasic(AbstractHttpConfigurer::disable);
 
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        .anyRequest().authenticated())
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JwtAuthFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class);
+
+//                .authorizeHttpRequests(auth -> auth
+//
+//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                        .requestMatchers("/api/auth/**").permitAll()
+//                        .requestMatchers("/test/**").permitAll()
+//                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+//                        .requestMatchers("/api/attendance/**").permitAll()
+//                        .requestMatchers("/api/attendance").permitAll()
+//                        .anyRequest().authenticated())
+//                .httpBasic(AbstractHttpConfigurer::disable)
+//                .addFilterBefore(new JwtAuthFilter(jwtTokenProvider),
+//                        UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

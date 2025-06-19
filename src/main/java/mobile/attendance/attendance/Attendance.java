@@ -1,6 +1,5 @@
 package mobile.attendance.attendance;
 
-import java.sql.Date;
 import java.time.LocalDate;
 
 public class Attendance {

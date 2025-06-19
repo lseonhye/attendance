@@ -42,11 +42,11 @@ public class AttendanceLogController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateAttendance(@PathVariable("id") final Long logId,
-                                                   @RequestBody final AttendanceLogRequest request) {
-        AttendanceLog updateAttendance = new AttendanceLog(logId, request.getNote());
-        attendanceLogService.updateAttendanceLog(updateAttendance);
-        return ResponseEntity.ok("성공적으로 기록 노트가 수정되었습니다.");
+    public ResponseEntity<AttendanceLog> updateAttendance(
+            @PathVariable Long id,
+            @RequestBody AttendanceLogRequest req) {
+        AttendanceLog updated = attendanceLogService.updateAttendanceLog(new AttendanceLog(id, req.getNote()));
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
@@ -88,6 +88,7 @@ public class AttendanceLogController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
     @GetMapping("/{id}/duration")
     public ResponseEntity<?> getAttendanceDuration(@PathVariable("id") final Long id) {
         try {
@@ -99,6 +100,12 @@ public class AttendanceLogController {
         } catch (IllegalArgumentException | IllegalStateException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/test/create-logs")
+    public ResponseEntity<String> createLogsNow(){
+        attendanceLogService.createAttendanceLogs();   // 스케줄러 메서드 직접 호출
+        return ResponseEntity.ok("OK – logs created");
     }
 
 }
